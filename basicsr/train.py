@@ -185,8 +185,8 @@ def main():
     logger, tb_logger = init_loggers(opt)
 
     # create train and validation dataloaders
-    result = create_train_val_dataloader(opt, logger)
-    train_loader, train_sampler, val_loader, total_epochs, total_iters = result
+    result = create_train_val_dataloader(opt, logger)  ## comment this if count n_params, n_macs without dataset
+    train_loader, train_sampler, val_loader, total_epochs, total_iters = result  ## comment this if count n_params, n_macs without dataset
 
     # create model
     if resume_state:  # resume training
@@ -201,6 +201,15 @@ def main():
         model = create_model(opt)
         start_epoch = 0
         current_iter = 0
+
+    ## count n_params, n_macs
+    # print('\n\n\n ********** \n\n\n')
+    # print(type(model.net_g))
+    # import thop
+    # x = torch.randn(1, 3, 256, 256)
+    # n_macs, n_params = thop.profile(model.net_g, inputs=(x, ))
+    # print(n_params, n_macs)
+    # exit()
 
     # create message logger (formatted outputs)
     msg_logger = MessageLogger(opt, current_iter, tb_logger)
